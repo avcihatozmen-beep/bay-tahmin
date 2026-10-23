@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bay Tahmin</title>
-<meta name="theme-color" content="#0f3d2e">
+<meta name="theme-color" content="#0E2352">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,80 +12,144 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#f4f6f5; --card:#fff; --ink:#14201b; --muted:#66746e; --line:#e1e7e4; --acc:#0f7a55; --acc2:#0f3d2e; --bad:#c0392b; --mid:#d68910; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#0d1411; --card:#151f1a; --ink:#e7efeb; --muted:#8fa29a; --line:#24322b; --acc:#2fbf86; --acc2:#0a2a20; } }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding-bottom:env(safe-area-inset-bottom); }
-  header { position:sticky; top:0; z-index:5; background:var(--acc2); color:#fff; padding:calc(10px + env(safe-area-inset-top)) 16px 10px; }
-  header .top { display:flex; align-items:center; justify-content:space-between; }
-  header h1 { margin:0; font-size:20px; letter-spacing:.3px; }
-  header .ctrl { display:flex; gap:8px; margin-top:8px; }
-  header input[type=date] { flex:1; min-width:0; padding:8px; border-radius:10px; border:0; font-size:15px; }
-  #quota { font-size:12px; opacity:.8; }
-  .btn { background:var(--acc); color:#fff; border:0; border-radius:10px; padding:9px 14px; font-weight:600; font-size:14px; cursor:pointer; }
-  .btn.ghost { background:transparent; border:1px solid rgba(255,255,255,.5); }
-  .btn.small { padding:6px 10px; font-size:13px; }
-  .icon { background:none; border:0; color:#fff; font-size:22px; cursor:pointer; }
-  main { padding:12px 16px 40px; max-width:720px; margin:0 auto; }
-  .muted { color:var(--muted); } .small { font-size:12px; } .center { text-align:center; }
-  .league h2 { font-size:14px; margin:18px 0 6px; display:flex; align-items:center; gap:6px; }
-  .league h2 img { width:18px; height:18px; object-fit:contain; }
-  .match { background:var(--card); border:1px solid var(--line); border-radius:14px; margin-bottom:8px; padding:10px 12px; }
-  .row { display:flex; align-items:center; gap:10px; }
-  .time { width:42px; font-size:13px; color:var(--muted); }
+  /* Sözlük tasarım sistemi: mavi = yapı (başlık, seçim) · turuncu = eylem ve vurgu · kartlar 20px, düğmeler 14px */
+  :root {
+    --bg:#F1F3F7; --surface:#FFFFFF; --ink:#14213D; --muted:#5A6578; --line:#D8DDE6; --soft:#E6ECF7;
+    --accent:#1F4E9C; --accent-ink:#FFFFFF; --cta:#D9480F; --cta-ink:#FFFFFF;
+    --ok:#2B8A3E; --bad:#C62828; --warn:#F59F00; --err:#A32020; --errbg:#FDECEA;
+    --r-xs:8px; --r-m:14px; --r-l:20px; --gap:12px;
+    --sans:"Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --serif:"Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg:#0E1422; --surface:#172036; --ink:#E8ECF5; --muted:#98A3B8; --line:#2A3652; --soft:#1F2C48;
+    --accent:#7FA6EA; --accent-ink:#0E1422; --err:#F08A8A; --errbg:#3A1C22; color-scheme:dark; } }
+  :root[data-theme="dark"] { --bg:#0E1422; --surface:#172036; --ink:#E8ECF5; --muted:#98A3B8; --line:#2A3652; --soft:#1F2C48;
+    --accent:#7FA6EA; --accent-ink:#0E1422; --err:#F08A8A; --errbg:#3A1C22; color-scheme:dark; }
+  *, *::before, *::after { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 var(--serif); -webkit-text-size-adjust:100%;
+    padding-top:env(safe-area-inset-top, 0px); padding-bottom:env(safe-area-inset-bottom, 0px); }
+  .wrap { max-width:640px; margin:0 auto; padding-block:16px 40px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
+
+  .hero2 { position:relative; isolation:isolate; padding:16px 16px 16px 18px; border-radius:var(--r-l); overflow:hidden; color:#FFFFFF;
+    background:radial-gradient(120% 100% at 100% 0%, #3F6FD8 0%, rgba(63,111,216,0) 58%), linear-gradient(160deg, #0E2352 0%, #17388A 62%, #1F4AA8 100%);
+    box-shadow:0 14px 30px rgba(14,35,82,.38); }
+  .hero2::before { content:""; position:absolute; inset:0; z-index:-1; background-image:radial-gradient(rgba(255,255,255,.16) 1px, transparent 1.5px); background-size:14px 14px;
+    -webkit-mask-image:linear-gradient(115deg, transparent 25%, #000 100%); mask-image:linear-gradient(115deg, transparent 25%, #000 100%); }
+  .h2-glow { position:absolute; z-index:-1; right:-46px; bottom:-78px; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle, rgba(247,103,7,.5) 0%, rgba(247,103,7,0) 70%); }
+  .h2-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .hero2 h1 { margin:0; font:800 clamp(34px, 10.5vw, 46px)/1 var(--sans); letter-spacing:-0.05em; }
+  .hero2 h1 em { font-style:normal; color:#FFB27A; }
+  .h2-right { display:flex; align-items:center; gap:10px; }
+  .logo2 { flex:none; width:52px; height:52px; border-radius:var(--r-m); box-shadow:0 6px 14px rgba(0,0,0,.35); }
+  .gear { flex:none; width:44px; height:44px; min-height:0; padding:0; border-radius:50%; border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.14); color:#FFFFFF; font-size:22px; line-height:1; }
+  .h2-demo { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; margin-top:14px; }
+  .chip { display:flex; flex-direction:column; align-items:flex-start; gap:5px; padding:9px 10px 10px; border-radius:var(--r-m); background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.22); min-width:0; }
+  .chip b { font:800 10px var(--sans); letter-spacing:.1em; padding:2px 6px; border-radius:var(--r-xs); color:#FFFFFF; }
+  .chip.c1 b { background:#D9480F; } .chip.c2 b { background:#2F6FD6; } .chip.c3 b { background:#C2255C; }
+  .chip span { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:700 14px var(--sans); }
+  #quota { font:600 13px var(--sans); color:rgba(255,255,255,.85); margin-top:10px; display:block; }
+
+  .ctrl { display:flex; gap:8px; margin-top:var(--gap); flex-wrap:wrap; }
+  .ctrl input[type=date] { flex:1 1 140px; min-width:0; min-height:48px; padding:10px 12px; border-radius:var(--r-m); border:1.5px solid var(--line); background:var(--surface); color:var(--ink); font:600 16px var(--sans); }
+  button, .btn { font:600 16px var(--sans); border-radius:var(--r-m); padding:10px 16px; min-height:48px; cursor:pointer; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); }
+  .btn.primary, #load { background:var(--cta); border-color:var(--cta); color:var(--cta-ink); font-weight:700; }
+  #all { flex:1 1 100%; background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:700; }
+  .btn.small { min-height:40px; padding:6px 14px; font-size:15px; background:var(--cta); border-color:var(--cta); color:var(--cta-ink); font-weight:700; }
+  button:focus-visible, input:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+
+  main { display:block; }
+  .muted { color:var(--muted); } .small { font-size:13px; } .center { text-align:center; }
+  .league h2 { display:flex; align-items:center; gap:8px; margin:22px 0 8px; font:800 17px var(--sans); letter-spacing:-0.01em; }
+  .league h2 img { width:22px; height:22px; object-fit:contain; }
+  .league h2 .muted { font-weight:600; font-size:14px; }
+  .match { background:var(--surface); border:1.5px solid var(--line); border-radius:var(--r-l); margin-bottom:10px; padding:12px 14px; }
+  .row { display:flex; align-items:center; gap:12px; }
+  .time { flex:none; width:46px; font:700 14px var(--sans); color:var(--muted); font-variant-numeric:tabular-nums; }
   .live { color:var(--bad); }
-  .teams { flex:1; display:flex; flex-direction:column; min-width:0; }
+  .teams { flex:1; display:flex; flex-direction:column; min-width:0; font:700 16px var(--sans); }
   .teams span, .score span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .score { display:flex; flex-direction:column; font-weight:700; width:16px; text-align:center; }
-  .result { margin-top:10px; border-top:1px dashed var(--line); padding-top:10px; }
+  .score { display:flex; flex-direction:column; font:800 16px var(--sans); width:18px; text-align:center; }
+  .result { margin-top:12px; border-top:2px dashed var(--line); padding-top:12px; }
   .result:empty { display:none; } .hidden { display:none; }
-  .picks { display:grid; gap:6px; margin-bottom:8px; }
-  .pick { display:flex; align-items:center; gap:10px; background:var(--bg); border-radius:10px; padding:8px 10px; flex-wrap:wrap; }
-  .pick b { min-width:100px; }
-  #summary .pick { background:var(--card); border:1px solid var(--line); margin-bottom:6px; cursor:pointer; }
-  #summary .pick .small { width:100%; }
-  #summary h2 { font-size:15px; margin:8px 0; }
-  .conf { font-size:11px; padding:2px 7px; border-radius:20px; color:#fff; margin-left:auto; }
-  .conf.Yüksek { background:var(--acc); } .conf.Orta { background:var(--mid); } .conf.Düşük { background:#7f8c8d; }
-  .value { font-size:11px; padding:2px 7px; border-radius:20px; border:1px solid var(--acc); color:var(--acc); }
-  .xg { font-size:13px; margin:6px 0; }
-  .bar { display:grid; grid-template-columns:58px 1fr 38px 78px; align-items:center; gap:6px; font-size:13px; margin:3px 0; }
-  .bt { height:8px; background:var(--line); border-radius:5px; overflow:hidden; }
-  .bt span { display:block; height:100%; background:var(--acc); }
-  .bv { text-align:right; font-weight:600; }
-  details { margin-top:8px; } summary { cursor:pointer; color:var(--acc); font-weight:600; }
-  .team h3 { margin:10px 0 4px; font-size:14px; } .team p { margin:4px 0; font-size:13px; }
-  .fb { display:inline-block; width:20px; height:20px; line-height:20px; text-align:center; border-radius:5px; color:#fff; font-size:11px; font-weight:700; margin-right:2px; }
-  .fb.G { background:var(--acc); } .fb.B { background:#95a5a6; } .fb.M { background:var(--bad); }
-  ul.abs { margin:4px 0; padding-left:0; list-style:none; font-size:13px; } ul.abs li { margin:3px 0; }
-  .imp { font-size:10px; padding:1px 6px; border-radius:10px; color:#fff; background:#95a5a6; }
-  .imp.kritik { background:var(--bad); } .imp.yüksek { background:var(--mid); } .imp.orta { background:#5d8aa8; }
-  .err { background:#fdecea; color:#8a1f12; padding:10px; border-radius:10px; font-size:13px; }
-  .note { font-size:11px; color:var(--muted); text-align:center; margin-top:24px; }
-  dialog { border:0; border-radius:16px; padding:16px; width:min(94vw, 520px); background:var(--card); color:var(--ink); }
-  dialog::backdrop { background:rgba(0,0,0,.45); }
-  dialog h2 { margin-top:0; } dialog label { display:block; margin:5px 0; font-size:14px; }
-  dialog input[type=text], dialog input[type=password] { width:100%; padding:9px; border-radius:9px; border:1px solid var(--line); font-size:15px; background:var(--bg); color:var(--ink); }
-  #leagues { max-height:220px; overflow:auto; border:1px solid var(--line); border-radius:10px; padding:6px 10px; }
-  .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; flex-wrap:wrap; }
-  .actions .btn.sec { background:var(--line); color:var(--ink); }
+  .picks { display:grid; gap:8px; margin-bottom:10px; }
+  .pick { display:flex; align-items:center; gap:10px; background:var(--soft); border-radius:var(--r-m); padding:10px 12px; flex-wrap:wrap; font-family:var(--sans); }
+  .pick b { min-width:110px; font-weight:800; }
+  .pick > span:nth-of-type(1) { font-weight:800; font-variant-numeric:tabular-nums; }
+  #summary:empty { display:none; }
+  #summary { margin-top:16px; padding:14px; background:var(--surface); border:1.5px solid var(--line); border-left:5px solid var(--cta); border-radius:var(--r-l); }
+  #summary h2 { margin:0 0 8px; font:800 18px var(--sans); }
+  #summary .pick { margin-bottom:8px; cursor:pointer; }
+  #summary .pick .small { width:100%; color:var(--muted); }
+  .conf { font:700 12px var(--sans); padding:3px 9px; border-radius:999px; color:#FFFFFF; margin-left:auto; }
+  .conf.Yüksek { background:var(--ok); } .conf.Orta { background:var(--warn); color:#1B1B1B; } .conf.Düşük { background:var(--muted); }
+  .value { font:700 12px var(--sans); padding:2px 8px; border-radius:999px; border:1.5px solid var(--cta); color:var(--cta); }
+  .xg { font-size:15px; margin:8px 0; }
+  .bar { display:grid; grid-template-columns:64px 1fr 42px 84px; align-items:center; gap:8px; font:600 14px var(--sans); margin:4px 0; }
+  .bt { height:10px; background:var(--soft); border-radius:6px; overflow:hidden; }
+  .bt span { display:block; height:100%; background:var(--accent); border-radius:6px; }
+  .bv { text-align:right; font-weight:800; font-variant-numeric:tabular-nums; }
+  details { margin-top:10px; } summary { cursor:pointer; color:var(--accent); font:700 15px var(--sans); }
+  .team h3 { margin:14px 0 4px; font:800 16px var(--sans); color:var(--ink); }
+  .team p { margin:4px 0; font-size:14px; }
+  .fb { display:inline-block; width:22px; height:22px; line-height:22px; text-align:center; border-radius:var(--r-xs); color:#FFFFFF; font:800 11px var(--sans); margin-right:3px; }
+  .fb.G { background:var(--ok); } .fb.B { background:var(--muted); } .fb.M { background:var(--bad); }
+  ul.abs { margin:4px 0; padding-left:0; list-style:none; font-size:14px; } ul.abs li { margin:5px 0; }
+  .imp { font:700 11px var(--sans); padding:2px 8px; border-radius:999px; color:#FFFFFF; background:var(--muted); }
+  .imp.kritik { background:var(--bad); } .imp.yüksek { background:var(--cta); } .imp.orta { background:var(--accent); color:var(--accent-ink); }
+  .err { background:var(--errbg); color:var(--err); padding:12px 14px; border-radius:var(--r-m); font-size:15px; margin-top:14px; }
+  .note { font-size:13px; color:var(--muted); text-align:center; margin-top:28px; }
+  #list > p { margin-top:18px; }
+  dialog { border:0; border-radius:var(--r-l); padding:18px; width:min(94vw, 520px); background:var(--surface); color:var(--ink); border-top:5px solid var(--cta); }
+  dialog::backdrop { background:rgba(14,20,34,.55); }
+  dialog h2 { margin-top:0; font:800 22px var(--sans); } dialog label { display:block; margin:6px 0; font-size:15px; }
+  dialog p b { font-family:var(--sans); }
+  dialog input[type=text], dialog input[type=password] { width:100%; margin-top:4px; padding:11px; border-radius:var(--r-m); border:1.5px solid var(--line); font:500 16px var(--serif); background:var(--bg); color:var(--ink); }
+  dialog input[type=checkbox] { width:20px; height:20px; vertical-align:-4px; accent-color:var(--accent); }
+  input[type=range] { accent-color:var(--cta); }
+  #leagues { max-height:240px; overflow:auto; border:1.5px solid var(--line); border-radius:var(--r-m); padding:6px 12px; }
+  .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:14px; flex-wrap:wrap; }
+  .actions .btn.sec { background:var(--soft); border-color:transparent; color:var(--ink); }
+  #save { background:var(--cta); border-color:var(--cta); color:var(--cta-ink); font-weight:700; }
+  @media (prefers-reduced-motion: no-preference) {
+    button { transition:transform .08s; } button:active:not(:disabled) { transform:scale(.97); }
+    @keyframes fxUp { from { opacity:.4; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    .result > * { animation:fxUp .3s ease both; }
+  }
 </style>
 </head>
 <body>
-<header>
-  <div class="top"><h1>⚽ Bay Tahmin</h1><span id="quota"></span><button class="icon" id="gear" aria-label="Ayarlar">⚙︎</button></div>
-  <div class="ctrl">
-    <input type="date" id="date">
-    <button class="btn" id="load">Maçlar</button>
-    <button class="btn ghost" id="all">Tümünü analiz et</button>
+<div class="wrap">
+<header class="hero2" aria-label="Bay Tahmin">
+  <span class="h2-glow" aria-hidden="true"></span>
+  <div class="h2-head">
+    <h1>Bay <em>Tahmin</em></h1>
+    <div class="h2-right">
+      <img class="logo2" src="icon-180.png" alt="">
+      <button class="gear" id="gear" aria-label="Ayarlar">⚙︎</button>
+    </div>
   </div>
+  <div class="h2-demo" aria-hidden="true">
+    <div class="chip c1"><b>FORM</b><span>Son 6 maç</span></div>
+    <div class="chip c2"><b>EKSİK</b><span>Sakatlık</span></div>
+    <div class="chip c3"><b>ORAN</b><span>Piyasa</span></div>
+  </div>
+  <span id="quota"></span>
 </header>
+<div class="ctrl">
+  <input type="date" id="date" aria-label="Tarih">
+  <button class="btn" id="load">Maçları getir</button>
+  <button class="btn" id="all">Tümünü analiz et</button>
+</div>
 <main>
   <div id="summary"></div>
   <div id="list"></div>
   <p class="note">Tahminler istatistiksel modeldir, sonuç garantisi vermez. Sorumlu oyna.</p>
 </main>
+</div>
 
 <dialog id="settings">
   <h2>Ayarlar</h2>
