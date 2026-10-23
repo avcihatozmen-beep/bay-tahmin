@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bay Tahmin</title>
+<meta name="theme-color" content="#0f3d2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bay Tahmin">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+  :root { --bg:#f4f6f5; --card:#fff; --ink:#14201b; --muted:#66746e; --line:#e1e7e4; --acc:#0f7a55; --acc2:#0f3d2e; --bad:#c0392b; --mid:#d68910; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0d1411; --card:#151f1a; --ink:#e7efeb; --muted:#8fa29a; --line:#24322b; --acc:#2fbf86; --acc2:#0a2a20; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding-bottom:env(safe-area-inset-bottom); }
+  header { position:sticky; top:0; z-index:5; background:var(--acc2); color:#fff; padding:calc(10px + env(safe-area-inset-top)) 16px 10px; }
+  header .top { display:flex; align-items:center; justify-content:space-between; }
+  header h1 { margin:0; font-size:20px; letter-spacing:.3px; }
+  header .ctrl { display:flex; gap:8px; margin-top:8px; }
+  header input[type=date] { flex:1; min-width:0; padding:8px; border-radius:10px; border:0; font-size:15px; }
+  #quota { font-size:12px; opacity:.8; }
+  .btn { background:var(--acc); color:#fff; border:0; border-radius:10px; padding:9px 14px; font-weight:600; font-size:14px; cursor:pointer; }
+  .btn.ghost { background:transparent; border:1px solid rgba(255,255,255,.5); }
+  .btn.small { padding:6px 10px; font-size:13px; }
+  .icon { background:none; border:0; color:#fff; font-size:22px; cursor:pointer; }
+  main { padding:12px 16px 40px; max-width:720px; margin:0 auto; }
+  .muted { color:var(--muted); } .small { font-size:12px; } .center { text-align:center; }
+  .league h2 { font-size:14px; margin:18px 0 6px; display:flex; align-items:center; gap:6px; }
+  .league h2 img { width:18px; height:18px; object-fit:contain; }
+  .match { background:var(--card); border:1px solid var(--line); border-radius:14px; margin-bottom:8px; padding:10px 12px; }
+  .row { display:flex; align-items:center; gap:10px; }
+  .time { width:42px; font-size:13px; color:var(--muted); }
+  .live { color:var(--bad); }
+  .teams { flex:1; display:flex; flex-direction:column; min-width:0; }
+  .teams span, .score span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .score { display:flex; flex-direction:column; font-weight:700; width:16px; text-align:center; }
+  .result { margin-top:10px; border-top:1px dashed var(--line); padding-top:10px; }
+  .result:empty { display:none; } .hidden { display:none; }
+  .picks { display:grid; gap:6px; margin-bottom:8px; }
+  .pick { display:flex; align-items:center; gap:10px; background:var(--bg); border-radius:10px; padding:8px 10px; flex-wrap:wrap; }
+  .pick b { min-width:100px; }
+  #summary .pick { background:var(--card); border:1px solid var(--line); margin-bottom:6px; cursor:pointer; }
+  #summary .pick .small { width:100%; }
+  #summary h2 { font-size:15px; margin:8px 0; }
+  .conf { font-size:11px; padding:2px 7px; border-radius:20px; color:#fff; margin-left:auto; }
+  .conf.Yüksek { background:var(--acc); } .conf.Orta { background:var(--mid); } .conf.Düşük { background:#7f8c8d; }
+  .value { font-size:11px; padding:2px 7px; border-radius:20px; border:1px solid var(--acc); color:var(--acc); }
+  .xg { font-size:13px; margin:6px 0; }
+  .bar { display:grid; grid-template-columns:58px 1fr 38px 78px; align-items:center; gap:6px; font-size:13px; margin:3px 0; }
+  .bt { height:8px; background:var(--line); border-radius:5px; overflow:hidden; }
+  .bt span { display:block; height:100%; background:var(--acc); }
+  .bv { text-align:right; font-weight:600; }
+  details { margin-top:8px; } summary { cursor:pointer; color:var(--acc); font-weight:600; }
+  .team h3 { margin:10px 0 4px; font-size:14px; } .team p { margin:4px 0; font-size:13px; }
+  .fb { display:inline-block; width:20px; height:20px; line-height:20px; text-align:center; border-radius:5px; color:#fff; font-size:11px; font-weight:700; margin-right:2px; }
+  .fb.G { background:var(--acc); } .fb.B { background:#95a5a6; } .fb.M { background:var(--bad); }
+  ul.abs { margin:4px 0; padding-left:0; list-style:none; font-size:13px; } ul.abs li { margin:3px 0; }
+  .imp { font-size:10px; padding:1px 6px; border-radius:10px; color:#fff; background:#95a5a6; }
+  .imp.kritik { background:var(--bad); } .imp.yüksek { background:var(--mid); } .imp.orta { background:#5d8aa8; }
+  .err { background:#fdecea; color:#8a1f12; padding:10px; border-radius:10px; font-size:13px; }
+  .note { font-size:11px; color:var(--muted); text-align:center; margin-top:24px; }
+  dialog { border:0; border-radius:16px; padding:16px; width:min(94vw, 520px); background:var(--card); color:var(--ink); }
+  dialog::backdrop { background:rgba(0,0,0,.45); }
+  dialog h2 { margin-top:0; } dialog label { display:block; margin:5px 0; font-size:14px; }
+  dialog input[type=text], dialog input[type=password] { width:100%; padding:9px; border-radius:9px; border:1px solid var(--line); font-size:15px; background:var(--bg); color:var(--ink); }
+  #leagues { max-height:220px; overflow:auto; border:1px solid var(--line); border-radius:10px; padding:6px 10px; }
+  .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; flex-wrap:wrap; }
+  .actions .btn.sec { background:var(--line); color:var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1>⚽ Bay Tahmin</h1><span id="quota"></span><button class="icon" id="gear" aria-label="Ayarlar">⚙︎</button></div>
+  <div class="ctrl">
+    <input type="date" id="date">
+    <button class="btn" id="load">Maçlar</button>
+    <button class="btn ghost" id="all">Tümünü analiz et</button>
+  </div>
+</header>
+<main>
+  <div id="summary"></div>
+  <div id="list"></div>
+  <p class="note">Tahminler istatistiksel modeldir, sonuç garantisi vermez. Sorumlu oyna.</p>
+</main>
+
+<dialog id="settings">
+  <h2>Ayarlar</h2>
+  <label>API-Football anahtarı
+    <input type="password" id="key" autocomplete="off" placeholder="dashboard.api-football.com → Account → API Key">
+  </label>
+  <p class="muted small">Anahtar sadece bu telefonda saklanır. Ücretsiz hesap: dashboard.api-football.com</p>
+  <label><input type="checkbox" id="demo"> Demo modu (anahtarsız örnek verilerle dene)</label>
+  <p><b>Ligler</b></p>
+  <div id="leagues"></div>
+  <label>Ek lig ID'leri (virgülle)
+    <input type="text" id="extra" placeholder="örn. 197, 218">
+  </label>
+  <label>Piyasa oranlarının ağırlığı: <b id="mwv"></b>
+    <input type="range" id="mw" min="0" max="80" step="5" style="width:100%">
+  </label>
+  <div class="actions">
+    <button class="btn sec" id="clear">Önbelleği temizle</button>
+    <button class="btn sec" id="cancel">Vazgeç</button>
+    <button class="btn" id="save">Kaydet</button>
+  </div>
+</dialog>
+
+<script src="model.js"></script>
+<script src="demo.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
